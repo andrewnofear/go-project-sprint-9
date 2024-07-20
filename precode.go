@@ -12,13 +12,11 @@ import (
 // отправляет их в канал ch. При этом после записи в канал для каждого числа
 // вызывается функция fn. Она служит для подсчёта количества и суммы
 // сгенерированных чисел.
-var mu sync.Mutex
 
 func Generator(ctx context.Context, ch chan<- int64, fn func(int64)) {
 	// 1. Функция Generator
 	var counter int64 = 1
 	for {
-		mu.Lock()
 		select {
 		case <-ctx.Done():
 			close(ch)
@@ -27,7 +25,6 @@ func Generator(ctx context.Context, ch chan<- int64, fn func(int64)) {
 			fn(counter)
 			counter++
 		}
-		mu.Unlock()
 	}
 }
 
